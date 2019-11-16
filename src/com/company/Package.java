@@ -5,6 +5,8 @@ public class Package {
     public double weight;
     public String track;
 
+
+
     private boolean canContain;
     private boolean canBeIn;
     private double place;
@@ -19,6 +21,18 @@ public class Package {
 
     public void set_place(double I){
         this.place = I;
+    }
+
+    public double get_place(){
+        return this.place;
+    }
+
+    public boolean get_CanContain(){
+        return this.canContain;
+    }
+
+    public boolean get_CanBeIn(){
+        return this.canBeIn;
     }
 
 
