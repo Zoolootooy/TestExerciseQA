@@ -1,6 +1,7 @@
 package com.company;
 
-
+//THIS IS:
+//абстрактный класс-упаковка для описания общих полей и методов
 
 public abstract class Package {
     public double price;
@@ -9,33 +10,7 @@ public abstract class Package {
 
 
 
-    private boolean canContain;
-    private boolean canBeIn;
-    private double place;
 
-    public void set_canContain(boolean B){
-        this.canContain = B;
-    }
-
-    public void set_canBeIn(boolean B){
-        this.canBeIn = B;
-    }
-
-    public void set_place(double I){
-        this.place = I;
-    }
-
-    public double get_place(){
-        return this.place;
-    }
-
-    public boolean get_CanContain(){
-        return this.canContain;
-    }
-
-    public boolean get_CanBeIn(){
-        return this.canBeIn;
-    }
 
 
     public double GetRandPrice(double min, double max){
@@ -54,11 +29,7 @@ public abstract class Package {
         return (double)d;
     }
 
-    public void setStartData(boolean _canContain, boolean _canBeIn, double _place){
-        this.set_canContain(_canContain);
-        this.set_canBeIn(_canBeIn);
-        this.set_place(_place);
-    }
+
 
     public String GetRandTrack(){
         String S = new String();
