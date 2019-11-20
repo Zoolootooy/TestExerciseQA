@@ -2,12 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="00629bd3-e755-43b1-a591-30d22a07b9f3" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/com/company/Packing.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/TestExercise/com/company/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TestExercise/com/company/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TestExercise/com/company/Package.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TestExercise/com/company/Package.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/TestExercise/com/company/Receipts.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TestExercise/com/company/Receipts.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/TestExercise/com/company/Wooden_Box.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TestExercise/com/company/Wooden_Box.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/Package.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Package.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/Receipts.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Receipts.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Wooden_Box.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Wooden_Box.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

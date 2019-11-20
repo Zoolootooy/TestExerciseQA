@@ -5,11 +5,11 @@ import java.io.IOException;
 
 public class Receipts {
     public Corrugated_Box[] cb;
-    private Big_Corrugated_Box[] bcb;
-    private Cardboard_Envelope[] ce;
-    private Polypropylene_Bag[] pb;
-    private Bubble_Wrap[] bw;
-    private Wooden_Box[] wb;
+    public Big_Corrugated_Box[] bcb;
+    public Cardboard_Envelope[] ce;
+    public Polypropylene_Bag[] pb;
+    public Bubble_Wrap[] bw;
+    public Wooden_Box[] wb;
 
     public int cbIndex;
     public int bcbIndex;
@@ -75,22 +75,271 @@ public class Receipts {
     }
 
     public void Form(){
-        try(FileWriter writer = new FileWriter("D://Test_log-out.txt", false)){//append = дозаписать
+        String path = "D://Log-out.txt";
+        try(FileWriter writer = new FileWriter("D://Log-out.txt", false)){//append = дозаписать
             String S = "";
+            int counter = 0;
+            double price = 0, weight = 0;
 
-            //запись уже имеющихся деревянных ящиков
+
+            for (int i = 0; i <= cbIndex; i++){
+                counter++;
+                price += cb[cbIndex].price;
+                weight += cb[cbIndex].weight;
+            }
+            for (int i = 0; i <= bcbIndex; i++){
+                counter++;
+                price += bcb[bcbIndex].price;
+                weight += bcb[bcbIndex].weight;
+            }
+            for (int i = 0; i <= ceIndex; i++){
+                counter++;
+                price += ce[ceIndex].price;
+                weight += ce[ceIndex].weight;
+            }
+            for (int i = 0; i <= pbIndex; i++){
+                counter++;
+                price += pb[pbIndex].price;
+                weight += pb[pbIndex].weight;
+            }
+            for (int i = 0; i <= bwIndex; i++){
+                counter++;
+                price += bw[bwIndex].price;
+                weight += bw[bwIndex].weight;
+            }
+            for (int i = 0; i <= wbIndex; i++){
+                counter++;
+                price += wb[wbIndex].price;
+                weight += wb[wbIndex].weight;
+            }
+
+            price = Math.round(price * 100.0) / 100.0;
+            weight = Math.round(weight * 100.0) / 100.0;
+
+            S += "На склад поступило " + counter + " посылок:\r\n";
+            S += "- коробки из гофрокартона: " + (cbIndex+1) + "шт.\r\n";
+            S += "- большие коробки из гофрокартона: " + (bcbIndex+1) + "шт.\r\n";
+            S += "- картонные конверты: " + (ceIndex+1) + "шт.\r\n";
+            S += "- мешки полипропиленовые: " + (pbIndex+1) + "шт.\r\n";
+            S += "- посылки в воздушно-пузырчатой пленке: " + (bwIndex+1) + "шт.\r\n";
+            S += "- деревянные ящики: " + (wbIndex+1) + "шт.\r\n";
+
+            writer.write(S);
+            writer.append("");
+            writer.flush();
+            S = "";
+
+            S += "Общая оцененная стоимость поступивших посылок: " + price + " грн\r\n";
+            S += "Общий вес поступивших посылок: " + weight + " кг.\r\n";
+            S += "Подготовленные посылки на отправку из склада:\r\n\r\n";
+            writer.write(S);
+            writer.append("");
+            writer.flush();
+            S = "";
+
             if (wbIndex > -1){
                 for (int i = 0; i <= wbIndex; i++){
-                    S += "- деревянный ящик (" + wb[i].weight + "кг, ";
-                    S += wb[i].price + " грн)";
-                    S += " [" + wb[i].track + "]";
-                    writer.write(S);
-                    writer.append("\r\n");
-                    writer.flush();
-                    S = "";
+                    Packing P = new Packing();
+                    P.add_wb(wb[i]);
+                    P.toLog_File(path);
                 }
             }
 
+            if (pbIndex > -1){
+                while (pbIndex > -1){
+                    Packing P = new Packing();
+                    P.add_pb(pb[pbIndex]);
+                    pbIndex--;
+
+                    // +1 bcb
+                    if ((bcbIndex > -1) && (P.Place < 6)){
+                        P.add_bcb(bcb[bcbIndex]);
+                        bcbIndex--;
+                    }
+
+                    //+2cb
+                    if ((cbIndex > 0) && (P.Place < 6)){
+                        P.add_cb(cb[cbIndex]);
+                        P.add_cb(cb[cbIndex-1]);
+                        cbIndex -= 2;
+                    }
+
+                    //+2bw
+                    if ((bwIndex > 0) && (P.Place < 6)){
+                        P.add_bw(bw[bwIndex]);
+                        P.add_bw(bw[bwIndex-1]);
+                        bwIndex -= 2;
+                    }
+
+                    //+1cb +1 bw
+                    if ((bwIndex == 0) && (cbIndex == 0) && (P.Place < 6)){
+                        P.add_bw(bw[bwIndex]);
+                        P.add_cb(cb[cbIndex]);
+                        cbIndex--;
+                        bwIndex --;
+                    }
+
+                    //+1cb and ce
+                    if ((cbIndex == 0) && (ceIndex > -1) && (P.Place < 6)){
+                        P.add_cb(cb[cbIndex]);
+                        while ((P.Place < 6) &&((ceIndex > -1))){
+                            P.add_ce(ce[ceIndex]);
+                            ceIndex--;
+                        }
+                        cbIndex--;
+                    }
+
+                    //+1bw and ce
+                    if ((bwIndex == 0) && (ceIndex > -1)  && (P.Place < 6)){
+                        P.add_bw(bw[bwIndex]);
+                        while (P.Place < 6){
+                            P.add_ce(ce[ceIndex]);
+                            ceIndex--;
+                        }
+                        bwIndex--;
+                    }
+
+                    //+1cb
+                    if ((cbIndex == 0) && (P.Place < 6)){
+                        P.add_cb(cb[cbIndex]);
+                        cbIndex--;
+                    }
+
+                    //+1bw
+                    if ((bwIndex == 0)  && (P.Place < 6)){
+                        P.add_bw(bw[bwIndex]);
+                        bwIndex--;
+                    }
+
+                    //+ce
+                    if ((ceIndex > -1)  && (P.Place < 6)){
+                        while ((P.Place < 6) && (ceIndex > -1)){
+                            P.add_ce(ce[ceIndex]);
+                            ceIndex--;
+                        }
+                    }
+
+                    P.toLog_File(path);
+                }
+            }
+
+            if (bcbIndex > -1){
+                while (bcbIndex > -1){
+                    Packing P = new Packing();
+
+                    // +3 bcb
+                    if ((bcbIndex > 1) && (P.Place < 6)){
+                        P.add_bcb(bcb[bcbIndex]);
+                        P.add_bcb(bcb[bcbIndex-1]);
+                        P.add_bcb(bcb[bcbIndex-2]);
+                        bcbIndex -= 3;
+                    }
+
+                    //+2bcb
+                    if ((bcbIndex == 1) && (P.Place < 6)){
+                        P.add_bcb(bcb[bcbIndex]);
+                        P.add_bcb(bcb[bcbIndex-1]);
+                        bcbIndex -= 2;
+                    }
+
+                    //+1bcb
+                    if ((bcbIndex == 0) && (P.Place < 6)){
+                        P.add_bcb(bcb[bcbIndex]);
+                        bcbIndex--;
+                    }
+
+                    if (P.Place < 6){
+                        while (P.Place < 6){
+
+                            //заполнить cb
+                            if ((cbIndex > -1) && (P.Place < 6)){
+                                P.add_cb(cb[cbIndex]);
+                                cbIndex--;
+                            }
+
+                            //заполнить bw
+                            if ((bwIndex > -1) && (P.Place < 6) && (cbIndex < 0)){
+                                P.add_bw(bw[bwIndex]);
+                                bwIndex--;
+                            }
+
+                            //заполнить ce
+                            if ((ceIndex > -1) && (P.Place < 6) && (bwIndex < 0) && (cbIndex < 0)){
+                                P.add_ce(ce[ceIndex]);
+                                ceIndex--;
+                            }
+                        }
+                    }
+
+
+                    P.toLog_File(path);
+                }
+            }
+
+            if (cbIndex > -1){
+                while (cbIndex > -1){
+                    Packing P = new Packing();
+                    while ((P.Place < 6) && ((cbIndex > -1) || (bwIndex > -1) || (ceIndex > -1))) {
+                        //заполнить cb
+                        if ((cbIndex > -1) && (P.Place < 6)){
+                            P.add_cb(cb[cbIndex]);
+                            cbIndex--;
+                        }
+
+                        //заполнить bw
+                        if ((bwIndex > -1) && (P.Place < 6) && (cbIndex < 0)){
+                            P.add_bw(bw[bwIndex]);
+                            bwIndex--;
+                        }
+
+                        //заполнить ce
+                        if ((ceIndex > -1) && (P.Place < 6) && (bwIndex < 0) && (cbIndex < 0)){
+                            P.add_ce(ce[ceIndex]);
+                            ceIndex--;
+                        }
+                    }
+
+
+                    P.toLog_File(path);
+                }
+            }
+
+
+            if (bwIndex > -1){
+                while (bwIndex > -1){
+                    Packing P = new Packing();
+                    while ((P.Place < 6) && ((bwIndex > -1) || (ceIndex > -1))){
+                        //заполнить bw
+                        if ((bwIndex > -1) && (P.Place < 6)){
+                            P.add_bw(bw[bwIndex]);
+                            bwIndex--;
+                        }
+
+                        //заполнить ce
+                        if ((ceIndex > -1) && (P.Place < 6) && (bwIndex < 0)){
+                            P.add_ce(ce[ceIndex]);
+                            ceIndex--;
+                        }
+                    }
+
+                    P.toLog_File(path);
+                }
+            }
+
+            if (ceIndex > -1){
+                while (ceIndex > -1){
+                    Packing P = new Packing();
+
+                    while ((P.Place < 6) && (ceIndex > -1)){
+                        if ((ceIndex > -1) && (P.Place < 6)){
+                            P.add_ce(ce[ceIndex]);
+                            ceIndex--;
+                        }
+                    }
+
+                    P.toLog_File(path);
+                }
+            }
 
 
         } catch(IOException ex){
@@ -98,8 +347,9 @@ public class Receipts {
         };
     }
 
+
     public void createLog_In(){
-        try(FileWriter writer = new FileWriter("D://Test_log-in.txt", false)){//append = дозаписать
+        try(FileWriter writer = new FileWriter("D://Log-in.txt", false)){//append = дозаписать
             String S = "";
 
             if (cbIndex > -1){
@@ -179,6 +429,8 @@ public class Receipts {
             System.out.println(ex.getMessage());
         };
     }
+
+
 
     //возвращает место, занимаемое всеми упаковками
     public double ExpectedPlace(){

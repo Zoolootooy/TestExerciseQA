@@ -1,6 +1,8 @@
 package com.company;
 
-public class Package {
+
+
+public abstract class Package {
     public double price;
     public double weight;
     public String track;
