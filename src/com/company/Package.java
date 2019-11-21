@@ -2,6 +2,10 @@ package com.company;
 
 //THIS IS:
 //абстрактный класс-упаковка для описания общих полей и методов
+//-возвращающий случайную цену в диапазоне GetRandPrice(double min, double max)
+//-возвращающий случайный вес в диапазоне GetRandWeight(double min, double max)
+//-отбрасывающий все знаки после десятой/сотой и т.д. double roundTo (double d, int precise)
+//-возвращающий случайный трек из 14 символов (заглавные латинские + цифры) GetRandTrack()
 
 public abstract class Package {
     public double price;
